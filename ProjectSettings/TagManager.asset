@@ -13,10 +13,10 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - MC
+  - Background
+  - TileLayer1
+  - Map
   - 
   - 
   - 
@@ -40,4 +40,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: MC
+    uniqueID: 842899547
+    locked: 0
+  - name: Background
+    uniqueID: 4038624049
+    locked: 0
+  - name: TileLayer1
+    uniqueID: 3564025095
+    locked: 0
+  - name: Map
+    uniqueID: 1176024939
     locked: 0
