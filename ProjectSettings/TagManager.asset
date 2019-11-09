@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Wall
   - SideWall
+  - LeftWall
+  - RightWall
+  - Flatform
   layers:
   - Default
   - TransparentFX
