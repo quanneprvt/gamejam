@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController controller;
     public float moveSpeed = 5f;
     public float accSpeed = 5f;
+    public float accSpeedFall = 5f;
+    public GameObject rope;
     // public Animator animator;
     //
     // float hMove = 0f;
@@ -23,8 +25,12 @@ public class PlayerMovement : MonoBehaviour
     private float m_MoveStep = 0f;
     private bool m_IsArrived = true;
     private Vector3 m_Destination = new Vector3(0, 0, 0);
+    private Vector3 tempPos = Vector3.zero;
     private double m_MoveAngle = 0;
-    private float tempSpeed = 0;
+    private float tempSpeedX = 0;
+    private float tempSpeedY = 0;
+    private bool isTouchSide = false;
+    private bool isTouchTop = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -54,18 +60,39 @@ public class PlayerMovement : MonoBehaviour
         // else if (Input.GetButtonUp("Crouch"))
         //     isCrouch = false;
         //
+        // if (!m_IsArrived)
+            // transform.position = tempPos;
 
         if (Input.GetButtonDown("Fire1"))
         {
+            StopHandler(false, false);
             MoveHandler();
             // point.z = 0;
             // Debug.Log(point);
             // transform.position = point;
         }
+
+        if (!m_IsArrived)
+        {
+            tempPos.x = transform.position.x + tempSpeedX*(float)Math.Cos(m_MoveAngle*Math.PI/180)*Time.deltaTime;
+            if (r.gravityScale == 0f)
+            {
+                // Debug.Log("here");
+                tempPos.y +=  tempSpeedY*(float)Math.Sin(m_MoveAngle*Math.PI/180)*Time.deltaTime;
+            }
+            else 
+            {
+                tempPos.y = transform.position.y;
+                tempPos.y += tempSpeedY*(float)Math.Sin(m_MoveAngle*Math.PI/180)*Time.deltaTime;
+            }
+            transform.position = tempPos;
+        }
     }
 
     void MoveHandler()
     {
+        // StopHandler(false, false);
+        tempPos = transform.position;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);    
         Vector3 point = ray.origin + (ray.direction * Camera.main.transform.position.z * -1);
         m_Destination = point;
@@ -73,10 +100,37 @@ public class PlayerMovement : MonoBehaviour
         // m_MoveAngle = 90 - (double)Vector2.Angle(transform.position, (Vector2)point);
         // if (point.x < transform.position.x)
         //     m_MoveAngle = 180 - m_MoveAngle;
-        tempSpeed = moveSpeed;
+        tempSpeedX = moveSpeed;
+        tempSpeedY = moveSpeed;
+        isTouchSide = false;
+        r.velocity = Vector2.zero;
+        //
         m_MoveAngle = GetAngle(transform.position, (Vector2)point);
-        Debug.Log(m_MoveAngle);
         controller.SetGravity(0f);
+        Debug.Log(r.gravityScale);
+    }
+
+    void StopHandler(bool side, bool top)
+    {
+        // m_MoveStep = 0f;
+        // tempSpeed = moveSpeed;
+        switch (side)
+        {
+            case false:
+                m_Destination = Vector3.zero;
+                m_IsArrived = true;
+                controller.SetGravity(1f);
+                isTouchSide = false;
+            break;
+
+            case true:
+                tempSpeedX = moveSpeed;
+                // tempSpeedY = moveSpeed;
+                tempSpeedX *= -1;
+                controller.SetGravity(1f);
+                isTouchSide = true;
+            break;
+        }
     }
 
     double GetAngle(Vector2 p1, Vector2 p2)
@@ -89,26 +143,23 @@ public class PlayerMovement : MonoBehaviour
         return theta;
     }
 
-    void StopHandler()
-    {
-        m_MoveStep = 0f;
-        // tempSpeed = moveSpeed;
-        m_Destination = Vector3.zero;
-        m_IsArrived = true;
-        controller.SetGravity(1f);
-    }
-
     void FixedUpdate()
     {
         if (!m_IsArrived)
         {
             // m_MoveStep += 1*Time.fixedDeltaTime;
             // transform.position = Vector2.MoveTowards(transform.position, (Vector2)m_Destination, m_MoveStep);
-            tempSpeed += accSpeed*Time.fixedDeltaTime;
-            Vector2 p;
-            p.x = transform.position.x + tempSpeed*(float)Math.Cos(m_MoveAngle*Math.PI/180)*Time.fixedDeltaTime;
-            p.y = transform.position.y + tempSpeed*(float)Math.Sin(m_MoveAngle*Math.PI/180)*Time.fixedDeltaTime;
-            transform.position = p;
+            // Vector2 p;
+            if (!isTouchSide)
+            {
+                tempSpeedX += accSpeed*Time.fixedDeltaTime;
+                tempSpeedY += accSpeed*Time.fixedDeltaTime;
+            }
+            else
+            {
+                tempSpeedX = Math.Min(0, tempSpeedX + accSpeedFall*Time.fixedDeltaTime);
+            }
+            //
         }
         // if (Vector2.Distance(transform.position, (Vector2)m_Destination) < 2)
         // {
@@ -125,7 +176,11 @@ public class PlayerMovement : MonoBehaviour
         // Debug.Log("OnCollisionEnter2D");
         if (col.gameObject.tag == "Wall")
         {
-            StopHandler();
+            StopHandler(false, false);
+        }
+        if (col.gameObject.tag == "SideWall")
+        {
+            StopHandler(true, false);
         }
     }
 }
