@@ -70,6 +70,11 @@ public class CharacterController : MonoBehaviour
 		return m_Grounded;
 	}
 
+	public void SetGravity(float g)
+	{
+		m_Rigidbody2D.gravityScale = g;
+	}
+
 	public void Move(float move, bool crouch, bool jump)
 	{
 		// If crouching, check to see if the character can stand up

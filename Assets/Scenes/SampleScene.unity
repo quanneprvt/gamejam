@@ -324,7 +324,7 @@ GameObject:
   - component: {fileID: 749109361}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 1324198759}
   m_Layer: 0
   m_Name: Wall (1)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -768,7 +768,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1370051913}
-  moveSpeed: 50
+  moveSpeed: 8
+  accSpeed: 10
 --- !u!114 &1370051913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -810,7 +811,7 @@ GameObject:
   - component: {fileID: 1453953570}
   m_Layer: 0
   m_Name: Wall (2)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
