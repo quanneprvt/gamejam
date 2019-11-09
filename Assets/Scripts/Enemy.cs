@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     // Start is called before the first frame update
     public float speed;
-    public float distance;
+    private float distance;
     private bool movingRight = true;
 
     public Transform groundDetection;
@@ -15,10 +15,17 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D myRig;
     private float timer;
     [SerializeField]
+    private int type;
+    [SerializeField]
     private List<GameObject> item_prefab;
     [SerializeField]
     private Transform parentItem;
   
+
+    public int GetType()
+    {
+        return type;
+    }
 
     public void SetState(int state)
     {
@@ -41,13 +48,26 @@ public class Enemy : MonoBehaviour
             case GameConstants.ENEMY_STATE_SHOWING:
                 timer = GameConstants.TIMER_ENEMY_SHOWING;
                 break;
+            case GameConstants.ENEMY_STATE_WAITING:
+                timer = GameConstants.TIMER_ENEMY_WAITING;
+                break;
+            case GameConstants.ENEMY_STATE_SHOTING:
+                StartCoroutine(ShootBullet());
+
+                timer = GameConstants.TIMER_ENEMY_SHOTING;
+                break;
 
 
         }
     }
     void Start()
     {
+        if(type== GameConstants.ENEMY_TYPE1)
         SetState(GameConstants.ENEMY_STATE_MOVING);
+        else
+        {
+            SetState(GameConstants.ENEMY_STATE_WAITING);
+        }
     }
 
     public IEnumerator SpawnBullet()
@@ -66,9 +86,29 @@ public class Enemy : MonoBehaviour
             {
                 angle = -Random.Range(30f, 60f);
             }
-            item.GetComponent<Item>().Throw(angle);
+            item.GetComponent<Item>().Throw(angle,false);
             yield return new WaitForSeconds(0.5f);
         }
+    }
+    public IEnumerator ShootBullet()
+    {
+        for (int i = 0; i < GameConstants.ITEM_SPAWN_NUMER2; i++)
+        {
+            GameObject item = Instantiate(item_prefab[Random.Range(0, item_prefab.Count)]);
+            item.transform.position = transform.position + new Vector3(0, 0.5f, 0);
+            item.transform.SetParent(parentItem);
+            float angle = 0;
+
+            angle =  Random.Range(-30f, 30f);
+            if(Random.Range(0,1)==0)
+            {
+                angle *= -1;
+            }
+            Debug.Log(angle);
+            item.GetComponent<Item>().Throw(angle,true);
+            yield return new WaitForSeconds(0.5f);
+        }
+        Debug.Log("Go");
     }
     void Moving()
     {
@@ -88,6 +128,8 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
+    
     // Update is called once per frame
     void Update()
     {
@@ -134,9 +176,27 @@ public class Enemy : MonoBehaviour
                 if (timer > 0)
                 {
                     timer -= Time.deltaTime;
-                    Moving();
+                   
                     if (timer < 0)
                         SetState(GameConstants.ENEMY_STATE_MOVING);
+                }
+                break;
+            case GameConstants.ENEMY_STATE_WAITING:
+                if (timer > 0)
+                {
+                    timer -= Time.deltaTime;
+
+                    if (timer < 0)
+                        SetState(GameConstants.ENEMY_STATE_SHOTING);
+                }
+                break;
+            case GameConstants.ENEMY_STATE_SHOTING:
+                if (timer > 0)
+                {
+                    timer -= Time.deltaTime;
+
+                    if (timer < 0)
+                        SetState(GameConstants.ENEMY_STATE_WAITING);
                 }
                 break;
 

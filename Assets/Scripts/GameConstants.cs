@@ -6,6 +6,7 @@
     public const int ITEM_TYPE_BULLET = 0;
     public const int ITEM_TYPE_GOOD = 1;
 
+
     public const int ITEM_STATE_FALLING = 0;
     public const int ITEM_STATE_GROUND= 1;
     public const int ITEM_STATE_TAKING = 2;
@@ -13,6 +14,7 @@
     public const int ENEMY_TYPE1 = 0;
     public const int ENEMY_TYPE2 = 1;
     public const int ITEM_SPAWN_NUMER = 3;
+    public const int ITEM_SPAWN_NUMER2 = 2;
 
     public const int ENEMY_STATE_MOVING = 0;
     public const int ENEMY_STATE_THROW_BULLET = 1;
@@ -20,11 +22,16 @@
     public const int ENEMY_STATE_HIDDEN = 3;
     public const int ENEMY_STATE_SHOWING = 4;
 
+    public const int ENEMY_STATE_WAITING = 5;
+    public const int ENEMY_STATE_SHOTING = 6;
+
     public const float TIMER_ENEMY_MOVING = 3.2f;
     public const float TIMER_ENEMY_BULLET = 3f;
     public const float TIMER_ENEMY_MOVING_2 = 5f;
     public const float TIMER_ENEMY_HIDDEN = 4f;
     public const float TIMER_ENEMY_SHOWING = 1f;
+    public const float TIMER_ENEMY_WAITING = 6f;
+    public const float TIMER_ENEMY_SHOTING = 1f;
 
     public const int PLAYER_TYPE1 = 0;
     public const int PLAYER_TYPE2 = 1;

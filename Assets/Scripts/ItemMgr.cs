@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMgr : Singleton<EnemyMgr>
+public class ItemMgr : Singleton<EnemyMgr>
 {
     // Start is called before the first frame update
-    [SerializeField]
-    private List<Enemy> enemy_list ;
+    private List<Item> item_list;
     void Start()
     {
         

@@ -87,13 +87,20 @@ public class Item : MonoBehaviour
         //  Debug.Log(Quaternion.Euler(0, 0, 60) * Vector2.right);
 
     }
-    public void Throw(float angle)
+    public void Throw(float angle , bool isUp)
     {
        
         Vector2 vector = new Vector2();
+
         if (angle < 0)
             vector = Vector2.left;
         else vector = Vector2.right;
+        if (isUp)
+        {
+          
+            vector += Vector2.up*1.5f;
+        }
+       
         myRig.velocity = (Vector2)(Quaternion.Euler(0, 0, angle) * vector) * jumpForce;
         SetState(GameConstants.ITEM_STATE_FALLING);
     }

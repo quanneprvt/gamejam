@@ -174,9 +174,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
-  distance: 0
   groundDetection: {fileID: 2543436688898420369}
   State: 0
+  type: 0
   item_prefab:
   - {fileID: 8575538212986511182, guid: bc8488ece70f5d144b658b888543c2d5, type: 3}
   parentItem: {fileID: 0}

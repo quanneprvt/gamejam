@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMgr : Singleton<EnemyMgr>
+public class Enemy2 : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField]
-    private List<Enemy> enemy_list ;
     void Start()
     {
         
