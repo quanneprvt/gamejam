@@ -80,35 +80,56 @@ public class Enemy : MonoBehaviour
             float angle = 0;
             if (movingRight)
             {
-                angle = Random.Range(30f, 60f);
+                angle = Random.Range(GameConstants.SPAWN_ANGLE_OF_ENEMY1_MIN, GameConstants.SPAWN_ANGLE_OF_ENEMY1_MAX);
             }
             else
             {
-                angle = -Random.Range(30f, 60f);
+                angle = -Random.Range(GameConstants.SPAWN_ANGLE_OF_ENEMY1_MIN, GameConstants.SPAWN_ANGLE_OF_ENEMY1_MAX);
             }
-            item.GetComponent<Item>().Throw(angle,false);
+            ItemMgr.Instance.AddItem(item.GetComponent<Item>());
+            item.GetComponent<Item>().Throw(angle,false,transform.localEulerAngles.z);
             yield return new WaitForSeconds(0.5f);
         }
+    }
+    public void DestroyObject()
+    {
+        EnemyMgr.Instance.RemoveItem(this);
+        Destroy(this.gameObject);
     }
     public IEnumerator ShootBullet()
     {
         for (int i = 0; i < GameConstants.ITEM_SPAWN_NUMER2; i++)
         {
             GameObject item = Instantiate(item_prefab[Random.Range(0, item_prefab.Count)]);
-            item.transform.position = transform.position + new Vector3(0, 0.5f, 0);
+            //Vector3 point = new Vector3(0, 0.5f, 0);
+            //if (transform.localEulerAngles.z==90f)
+            //{
+            //    point = new Vector3(-1f, -0.50f, 0);
+            //}
+            //else if (transform.localEulerAngles.z == -90f)
+            //{
+            //    point = new Vector3(1f, -0.50f, 0);
+            //}
+            //else if (transform.localEulerAngles.z == 180f)
+            //{
+            //    point = new Vector3(0, -0.50f, 0);
+            //}
+
+            item.transform.position = transform.position;//+ point;
             item.transform.SetParent(parentItem);
+            ItemMgr.Instance.AddItem(item.GetComponent<Item>());
             float angle = 0;
 
-            angle =  Random.Range(-30f, 30f);
+            angle =  Random.Range(GameConstants.SPAWN_ANGLE_OF_ENEMY2_MIN, GameConstants.SPAWN_ANGLE_OF_ENEMY2_MAX);
             if(Random.Range(0,1)==0)
             {
                 angle *= -1;
             }
-            Debug.Log(angle);
-            item.GetComponent<Item>().Throw(angle,true);
+          //  Debug.Log(transform.rotation +" "+ transform.);
+            item.GetComponent<Item>().Throw(angle,true,transform.localEulerAngles.z);
             yield return new WaitForSeconds(0.5f);
         }
-        Debug.Log("Go");
+       
     }
     void Moving()
     {
@@ -176,7 +197,7 @@ public class Enemy : MonoBehaviour
                 if (timer > 0)
                 {
                     timer -= Time.deltaTime;
-                   
+                    
                     if (timer < 0)
                         SetState(GameConstants.ENEMY_STATE_MOVING);
                 }

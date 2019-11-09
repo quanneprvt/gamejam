@@ -5,7 +5,15 @@
 
     public const int ITEM_TYPE_BULLET = 0;
     public const int ITEM_TYPE_GOOD = 1;
+    public const int BAR_ENEGRY_MAX_LEVEL = 3;
+    public const int BAR_POLUTION_MAX_LEVEL = 5;
+    public const int BAR_POLUTION_WARNING_LEVEL = 3;
 
+    public const float SPAWN_ANGLE_OF_ENEMY1_MIN = 30f;
+    public const float SPAWN_ANGLE_OF_ENEMY1_MAX= 60f;
+
+    public const float SPAWN_ANGLE_OF_ENEMY2_MIN = -30f;
+    public const float SPAWN_ANGLE_OF_ENEMY2_MAX = 30f;
 
     public const int ITEM_STATE_FALLING = 0;
     public const int ITEM_STATE_GROUND= 1;
@@ -21,6 +29,8 @@
     public const int ENEMY_STATE_MOVING_2 = 2;
     public const int ENEMY_STATE_HIDDEN = 3;
     public const int ENEMY_STATE_SHOWING = 4;
+
+    public const float ENEMY2_SHOTING_FORCE = 1.5f;
 
     public const int ENEMY_STATE_WAITING = 5;
     public const int ENEMY_STATE_SHOTING = 6;

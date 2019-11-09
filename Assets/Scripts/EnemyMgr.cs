@@ -11,7 +11,14 @@ public class EnemyMgr : Singleton<EnemyMgr>
     {
         
     }
-
+    public void AddItem(Enemy enemy )
+    {
+        enemy_list.Add(enemy);
+    }
+    public void RemoveItem(Enemy enemy)
+    {
+        enemy_list.Remove(enemy);
+    }
     // Update is called once per frame
     void Update()
     {

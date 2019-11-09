@@ -87,21 +87,30 @@ public class Item : MonoBehaviour
         //  Debug.Log(Quaternion.Euler(0, 0, 60) * Vector2.right);
 
     }
-    public void Throw(float angle , bool isUp)
+    public void DestroyObject()
+    {
+        ItemMgr.Instance.RemoveItem(this);
+        Destroy(this.gameObject);
+    }
+    public void Throw(float angle , bool isUp ,float rotate)
     {
        
+        Vector2 vector_horizon = new Vector2();
+        Vector2 vector_verticle = new Vector2();
         Vector2 vector = new Vector2();
 
         if (angle < 0)
-            vector = Vector2.left;
-        else vector = Vector2.right;
+            vector_horizon = Vector2.left;
+        else vector_horizon = Vector2.right;
+
         if (isUp)
         {
-          
-            vector += Vector2.up*1.5f;
+
+            vector_verticle = Vector2.up;
         }
        
-        myRig.velocity = (Vector2)(Quaternion.Euler(0, 0, angle) * vector) * jumpForce;
+        vector = vector_horizon+ (vector_verticle  * GameConstants.ENEMY2_SHOTING_FORCE);
+        myRig.velocity = (Vector2)(Quaternion.Euler(0, 0, angle+rotate) * vector) * jumpForce;
         SetState(GameConstants.ITEM_STATE_FALLING);
     }
 
