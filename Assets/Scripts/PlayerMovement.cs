@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public float accSpeed = 5f;
     public float accSpeedFall = 5f;
     public GameObject rope;
+    public GameObject[] sideWall;
     // public Animator animator;
     //
     // float hMove = 0f;
@@ -20,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private float width;
     private float height;
     Rigidbody2D r;
-    Vector2 v;
+    Vector3 point = Vector3.zero;
     //
     private float m_MoveStep = 0f;
     private bool m_IsArrived = true;
@@ -31,6 +32,18 @@ public class PlayerMovement : MonoBehaviour
     private float tempSpeedY = 0;
     private bool isTouchSide = false;
     private bool isTouchTop = false;
+    private double mDistance = 0;
+    private STATE mState;
+    enum STATE {
+        ROPE,
+        NORMAL
+    };
+    Vector2[] points = new Vector2[4] {
+        new Vector2((float)(-7.61), (float)5.75), 
+        new Vector2((float)(-7.61), (float)(-7.63)), 
+        new Vector2((float)7.65, (float)(-7.63)), 
+        new Vector2((float)7.65, (float)5.75)
+        };
     // Start is called before the first frame update
     void Start()
     {
@@ -72,20 +85,37 @@ public class PlayerMovement : MonoBehaviour
             // transform.position = point;
         }
 
-        if (!m_IsArrived)
+        switch (mState)
         {
-            tempPos.x = transform.position.x + tempSpeedX*(float)Math.Cos(m_MoveAngle*Math.PI/180)*Time.deltaTime;
-            if (r.gravityScale == 0f)
-            {
-                // Debug.Log("here");
-                tempPos.y +=  tempSpeedY*(float)Math.Sin(m_MoveAngle*Math.PI/180)*Time.deltaTime;
-            }
-            else 
-            {
-                tempPos.y = transform.position.y;
-                tempPos.y += tempSpeedY*(float)Math.Sin(m_MoveAngle*Math.PI/180)*Time.deltaTime;
-            }
-            transform.position = tempPos;
+            case STATE.NORMAL:
+                if (!m_IsArrived)
+                {
+                    tempPos.x = transform.position.x + tempSpeedX*(float)Math.Cos(m_MoveAngle*Math.PI/180)*Time.deltaTime;
+                    if (r.gravityScale == 0f)
+                    {
+                        // Debug.Log("here");
+                        tempPos.y +=  tempSpeedY*(float)Math.Sin(m_MoveAngle*Math.PI/180)*Time.deltaTime;
+                    }
+                    else 
+                    {
+                        tempPos.y = transform.position.y;
+                        tempPos.y += tempSpeedY*(float)Math.Sin(m_MoveAngle*Math.PI/180)*Time.deltaTime;
+                    }
+                    transform.position = tempPos;
+                    if (rope.transform.localScale.x > 0)
+                    {
+                        rope.transform.localScale -= new Vector3((float)1.75*Time.deltaTime, 0, 0);
+                    }
+                    // else rope.transform.localScale = new Vector3((float)0.01, 0, 0);
+                }
+            break;
+
+            case STATE.ROPE:
+                rope.transform.localScale += new Vector3((float)4*Time.deltaTime, 0, 0);
+                // Debug.Log(rope.GetComponent<BoxCollider2D>().bounds.size);
+                if (rope.GetComponent<BoxCollider2D>().bounds.size.x >= mDistance - 1)
+                    mState = STATE.NORMAL;
+            break;
         }
     }
 
@@ -94,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
         // StopHandler(false, false);
         tempPos = transform.position;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);    
-        Vector3 point = ray.origin + (ray.direction * Camera.main.transform.position.z * -1);
+        point = ray.origin + (ray.direction * Camera.main.transform.position.z * -1);
         m_Destination = point;
         m_IsArrived = false;
         // m_MoveAngle = 90 - (double)Vector2.Angle(transform.position, (Vector2)point);
@@ -106,8 +136,53 @@ public class PlayerMovement : MonoBehaviour
         r.velocity = Vector2.zero;
         //
         m_MoveAngle = GetAngle(transform.position, (Vector2)point);
+        rope.transform.eulerAngles = new Vector3(
+            rope.transform.eulerAngles.x,
+            rope.transform.eulerAngles.y,
+            (float)(m_MoveAngle)
+        );
         controller.SetGravity(0f);
-        Debug.Log(r.gravityScale);
+        // switch (true)
+        // {
+        //     case PointInTriangle((Vector2)point, transform.position, points[0], points[1]):
+        //         Debug.Log("left");
+        //     break;
+
+        //     case PointInTriangle((Vector2)point, transform.position, points[1], points[2]):
+        //         Debug.Log("down");
+        //     break;
+
+        //     case PointInTriangle((Vector2)point, transform.position, points[2], points[3]):
+        //         Debug.Log("right");
+        //     break;
+
+        //     case PointInTriangle((Vector2)point, transform.position, points[3], points[0]):
+        //         Debug.Log("top");
+        //     break;
+        // }
+        if (PointInTriangle((Vector2)point, transform.position, points[0], points[1]))
+                Debug.Log("left");
+        else 
+        {
+            if (PointInTriangle((Vector2)point, transform.position, points[1], points[2]))
+                Debug.Log("down");
+            else 
+            {
+                if (PointInTriangle((Vector2)point, transform.position, points[2], points[3]))
+                    Debug.Log("right");
+                else 
+                {
+                    if (PointInTriangle((Vector2)point, transform.position, points[3], points[0]))
+                        Debug.Log("top");
+                }
+            }
+        }
+        // mDistance = (transform.position.x > point.x) 
+        //         ? Math.Abs(sideWall[0].transform.position.x - transform.position.x)/Math.Cos(Math.PI - (m_MoveAngle*Math.PI/180))
+        //         : Math.Abs(sideWall[1].transform.position.x - transform.position.x)/Math.Cos(m_MoveAngle*Math.PI/180);
+        // Debug.Log(Math.Abs(sideWall[1].transform.position.x - transform.position.x)/Math.Cos(m_MoveAngle*Math.PI/180));
+        // rope.transform.localScale = Vector3.zero;
+        // mState = STATE.ROPE;
     }
 
     void StopHandler(bool side, bool top)
@@ -133,6 +208,27 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    float sign (Vector2 p1, Vector2 p2, Vector2 p3)
+    {
+        return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+    }
+
+    bool PointInTriangle (Vector2 pt, Vector2 v1, Vector2 v2, Vector2 v3)
+    {
+        float d1, d2, d3;
+        bool has_neg, has_pos;
+
+        d1 = sign(pt, v1, v2);
+        d2 = sign(pt, v2, v3);
+        d3 = sign(pt, v3, v1);
+
+        has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+        has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+        // Debug.Log("here");
+
+        return !(has_neg && has_pos);
+    }
+
     double GetAngle(Vector2 p1, Vector2 p2)
     {
         double dy = p2.y - p1.y;
@@ -145,21 +241,29 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!m_IsArrived)
+        switch (mState)
         {
-            // m_MoveStep += 1*Time.fixedDeltaTime;
-            // transform.position = Vector2.MoveTowards(transform.position, (Vector2)m_Destination, m_MoveStep);
-            // Vector2 p;
-            if (!isTouchSide)
-            {
-                tempSpeedX += accSpeed*Time.fixedDeltaTime;
-                tempSpeedY += accSpeed*Time.fixedDeltaTime;
-            }
-            else
-            {
-                tempSpeedX = Math.Min(0, tempSpeedX + accSpeedFall*Time.fixedDeltaTime);
-            }
-            //
+            case STATE.ROPE:
+            break;
+
+            case STATE.NORMAL:
+                if (!m_IsArrived)
+                {
+                    // m_MoveStep += 1*Time.fixedDeltaTime;
+                    // transform.position = Vector2.MoveTowards(transform.position, (Vector2)m_Destination, m_MoveStep);
+                    // Vector2 p;
+                    if (!isTouchSide)
+                    {
+                        tempSpeedX += accSpeed*Time.fixedDeltaTime;
+                        tempSpeedY += accSpeed*Time.fixedDeltaTime;
+                    }
+                    else
+                    {
+                        tempSpeedX = Math.Min(0, tempSpeedX + accSpeedFall*Time.fixedDeltaTime);
+                    }
+                    //
+                }
+            break;
         }
         // if (Vector2.Distance(transform.position, (Vector2)m_Destination) < 2)
         // {
