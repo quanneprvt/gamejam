@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject rope;
     public GameObject[] sideWall;
     public GameObject[] topdownWall;
+    public GameObject Player;
     // public Animator animator;
     //
     // float hMove = 0f;
@@ -34,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isTouchSide = false;
     private bool isTouchTop = false;
     private double mDistance = 0;
-    private float mBackRopeSpeed = 1.5f;
+    private float mBackRopeSpeed = 0f;
     private STATE mState;
     enum STATE {
         ROPE,
@@ -109,7 +110,7 @@ public class PlayerMovement : MonoBehaviour
                     if (rope.transform.localScale.x > 0)
                     {
                         // Debug.Log("doing");
-                        mBackRopeSpeed += 0.02f*Time.deltaTime;
+                        // mBackRopeSpeed += 0.02f*Time.deltaTime;
                         rope.transform.localScale -= new Vector3(mBackRopeSpeed*Time.deltaTime, 0, 0);
                     }
                     // else rope.transform.localScale = new Vector3((float)0.01, 0, 0);
@@ -118,9 +119,9 @@ public class PlayerMovement : MonoBehaviour
 
             case STATE.ROPE:
                 rope.transform.localScale += new Vector3((float)4*Time.deltaTime, 0, 0);
-                float length = 0.5f*rope.GetComponent<CircleCollider2D>().radius*rope.transform.localScale.x;
+                float length = rope.GetComponent<CircleCollider2D>().radius*rope.transform.localScale.x;
                 // Debug.Log(length);
-                if (length >= mDistance)
+                if (length >= mDistance - 1)
                     mState = STATE.NORMAL;
             break;
         }
@@ -141,14 +142,28 @@ public class PlayerMovement : MonoBehaviour
         tempSpeedY = moveSpeed;
         isTouchSide = false;
         r.velocity = Vector2.zero;
-        mBackRopeSpeed = 1.5f;
+        mBackRopeSpeed = 2.125f;
         //
         m_MoveAngle = GetAngle(transform.position, (Vector2)point);
+        transform.eulerAngles = new Vector3(
+            rope.transform.eulerAngles.x,
+            rope.transform.eulerAngles.y,
+            transform.position.x < point.x ? (float)(m_MoveAngle) : (float)(180 + m_MoveAngle)
+        );
+        Debug.Log(m_MoveAngle);
         rope.transform.eulerAngles = new Vector3(
             rope.transform.eulerAngles.x,
             rope.transform.eulerAngles.y,
-            (float)(m_MoveAngle)
+            (float)(m_MoveAngle%180)
         );
+        if (transform.position.x < point.x)
+        {
+            Player.transform.localScale = new Vector3(-1f , Player.transform.localScale.y, Player.transform.localScale.z);
+        }
+        else
+        {
+            Player.transform.localScale = new Vector3(1f , Player.transform.localScale.y, Player.transform.localScale.z);
+        }
         controller.SetGravity(0f);
         if (PointInTriangle((Vector2)point, transform.position, points[0], points[1]))
         {
@@ -195,6 +210,11 @@ public class PlayerMovement : MonoBehaviour
         // m_MoveStep = 0f;
         // tempSpeed = moveSpeed;
         rope.transform.localScale = new Vector3(0, 1, 1);
+        transform.eulerAngles = new Vector3(
+            rope.transform.eulerAngles.x,
+            rope.transform.eulerAngles.y,
+            0
+        );
         switch (side)
         {
             case false:
