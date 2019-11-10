@@ -52,13 +52,7 @@ public class Item : MonoBehaviour
                 SetState(GameConstants.ITEM_STATE_GROUND);
             }
             else
-             if (other.gameObject.tag == "SideWall")
-            {
-                myRig.velocity = Vector3.zero;
-                SetState(GameConstants.ITEM_STATE_GROUND);
-            }
-            else
-             if (other.gameObject.tag == "SideWall")
+             if (other.gameObject.tag == "Wall")
             {
                 myRig.velocity = Vector3.zero;
                 SetState(GameConstants.ITEM_STATE_GROUND);
