@@ -9,6 +9,8 @@ TagManager:
   - LeftWall
   - RightWall
   - Flatform
+  - Bullet
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -57,4 +59,7 @@ TagManager:
     locked: 0
   - name: Map
     uniqueID: 1176024939
+    locked: 0
+  - name: FadeEff
+    uniqueID: 2969078931
     locked: 0

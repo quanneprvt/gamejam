@@ -20,7 +20,9 @@ public class Enemy : MonoBehaviour
     private List<GameObject> item_prefab;
     [SerializeField]
     private Transform parentItem;
-  
+    [SerializeField]
+    private Animator animator;
+
 
     public int GetType()
     {
@@ -75,7 +77,7 @@ public class Enemy : MonoBehaviour
         for(int i=0;i<GameConstants.ITEM_SPAWN_NUMER;i++)
         {
             GameObject item= Instantiate(item_prefab[Random.Range(0, item_prefab.Count)]);
-            item.transform.position =  transform.position + new Vector3(0,0.5f,0);
+            item.transform.position =  transform.position + new Vector3(0,1f,0);
             item.transform.SetParent(parentItem);
             float angle = 0;
             if (movingRight)
@@ -101,21 +103,25 @@ public class Enemy : MonoBehaviour
         for (int i = 0; i < GameConstants.ITEM_SPAWN_NUMER2; i++)
         {
             GameObject item = Instantiate(item_prefab[Random.Range(0, item_prefab.Count)]);
-            //Vector3 point = new Vector3(0, 0.5f, 0);
-            //if (transform.localEulerAngles.z==90f)
-            //{
-            //    point = new Vector3(-1f, -0.50f, 0);
-            //}
-            //else if (transform.localEulerAngles.z == -90f)
-            //{
-            //    point = new Vector3(1f, -0.50f, 0);
-            //}
-            //else if (transform.localEulerAngles.z == 180f)
-            //{
-            //    point = new Vector3(0, -0.50f, 0);
-            //}
+            Vector3 point = new Vector3(0, 0.5f, 0);
+            if (transform.localEulerAngles.z == 90f)
+            {
+                point = new Vector3(0f, 1f, 0);
+            }
+            else if (transform.localEulerAngles.z == 0f)
+            {
+                point = new Vector3(1f, -0f, 0);
+            }
+            else if (transform.localEulerAngles.z == 180f)
+            {
+                point = new Vector3(-1f, 0f, 0);
+            }
+            else if (transform.localEulerAngles.z == -90f)
+            {
+                point = new Vector3(0f, -1f, 0);
+            }
 
-            item.transform.position = transform.position;//+ point;
+            item.transform.position = transform.position + point;
             item.transform.SetParent(parentItem);
             ItemMgr.Instance.AddItem(item.GetComponent<Item>());
             float angle = 0;
@@ -126,7 +132,7 @@ public class Enemy : MonoBehaviour
                 angle *= -1;
             }
           //  Debug.Log(transform.rotation +" "+ transform.);
-            item.GetComponent<Item>().Throw(angle,true,transform.localEulerAngles.z);
+            item.GetComponent<Item>().Throw(angle,true,transform.localEulerAngles.z-90f);
             yield return new WaitForSeconds(0.5f);
         }
        
@@ -135,8 +141,9 @@ public class Enemy : MonoBehaviour
     {
         transform.Translate(Vector2.right * speed * Time.deltaTime);
         RaycastHit2D groundInfo = Physics2D.Raycast(groundDetection.position, Vector2.down, distance);
-        if (groundInfo.collider == false)
+        if (groundInfo.collider.tag != "Flatform")
         {
+            
             if (movingRight == true)
             {
                 transform.eulerAngles = new Vector3(0, -180, 0);
@@ -147,7 +154,12 @@ public class Enemy : MonoBehaviour
                 transform.eulerAngles = new Vector3(0, 0, 0);
                 movingRight = true;
             }
+          
         }
+        //else
+        //{
+        //    Debug.Log(groundInfo.collider.tag);
+        //}
     }
 
     

@@ -8,6 +8,8 @@ public class Item : MonoBehaviour
     public int State;
     private Rigidbody2D myRig;
     private float jumpForce = 10;
+    
+    private Animator animator;
     public float Type ;
     public void SetState(int state)
     {
@@ -16,10 +18,15 @@ public class Item : MonoBehaviour
         {
          
             case GameConstants.ITEM_STATE_FALLING:
-
+                animator.SetInteger("state", 0);
                 Type = GameConstants.ITEM_TYPE_BULLET;
                 break;
+            case GameConstants.ITEM_STATE_CHANGING:
+                animator.SetInteger("state", 1);
+                Type = GameConstants.ITEM_TYPE_GOOD;
+                break;
             case GameConstants.ITEM_STATE_GROUND:
+                animator.SetInteger("state", Random.Range(2,6));
                 Type = GameConstants.ITEM_TYPE_GOOD;
                 break;
             case GameConstants.ITEM_STATE_TAKING:
@@ -49,13 +56,21 @@ public class Item : MonoBehaviour
             {
 
                 myRig.velocity = Vector3.zero;
-                SetState(GameConstants.ITEM_STATE_GROUND);
+                SetState(GameConstants.ITEM_STATE_CHANGING);
             }
             else
              if (other.gameObject.tag == "Wall")
             {
                 myRig.velocity = Vector3.zero;
-                SetState(GameConstants.ITEM_STATE_GROUND);
+                SetState(GameConstants.ITEM_STATE_CHANGING);
+                
+            }
+            else
+             if (other.gameObject.tag == "Enemy")
+            {
+                myRig.velocity = Vector3.zero;
+                SetState(GameConstants.ITEM_STATE_CHANGING);
+               
             }
             else
              if (other.gameObject.tag == "Bullet")
@@ -63,7 +78,7 @@ public class Item : MonoBehaviour
                 if (other.gameObject.GetComponent<Item>().Type == GameConstants.ITEM_TYPE_GOOD)
                 {
                     myRig.velocity = Vector3.zero;
-                    SetState(GameConstants.ITEM_STATE_GROUND);
+                    SetState(GameConstants.ITEM_STATE_CHANGING);
                 }
               //  other.gameObject.GetComponent<Item>().Type = GameConstants.ITEM_TYPE_GOOD;
             }
@@ -73,6 +88,7 @@ public class Item : MonoBehaviour
     {
 
         myRig = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
     void Start()
     {
@@ -111,6 +127,26 @@ public class Item : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        switch (State)
+        {
+
+            case GameConstants.ITEM_STATE_FALLING:
+               
+                break;
+            case GameConstants.ITEM_STATE_CHANGING:
+                if(GameDefine.Instance.IsDoneAnim(animator,"item"))
+                {
+                    SetState(GameConstants.ITEM_STATE_GROUND);
+                }
+                break;
+            case GameConstants.ITEM_STATE_GROUND:
+                
+                break;
+            case GameConstants.ITEM_STATE_TAKING:
+
+                break;
+
+
+        }
     }
 }
