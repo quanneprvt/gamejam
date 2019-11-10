@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public float accSpeedFall = 5f;
     public GameObject rope;
     public GameObject[] sideWall;
+    public GameObject[] topdownWall;
     // public Animator animator;
     //
     // float hMove = 0f;
@@ -33,10 +34,12 @@ public class PlayerMovement : MonoBehaviour
     private bool isTouchSide = false;
     private bool isTouchTop = false;
     private double mDistance = 0;
+    private float mBackRopeSpeed = 1.5f;
     private STATE mState;
     enum STATE {
         ROPE,
-        NORMAL
+        NORMAL,
+        NONE,
     };
     Vector2[] points = new Vector2[4] {
         new Vector2((float)(-7.61), (float)5.75), 
@@ -52,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
         //
         width = (float)Screen.width / 2.0f;
         height = (float)Screen.height / 2.0f;
+        mState = STATE.NONE;
     }
 
     // Update is called once per frame
@@ -104,7 +108,9 @@ public class PlayerMovement : MonoBehaviour
                     transform.position = tempPos;
                     if (rope.transform.localScale.x > 0)
                     {
-                        rope.transform.localScale -= new Vector3((float)1.75*Time.deltaTime, 0, 0);
+                        // Debug.Log("doing");
+                        mBackRopeSpeed += 0.02f*Time.deltaTime;
+                        rope.transform.localScale -= new Vector3(mBackRopeSpeed*Time.deltaTime, 0, 0);
                     }
                     // else rope.transform.localScale = new Vector3((float)0.01, 0, 0);
                 }
@@ -112,8 +118,9 @@ public class PlayerMovement : MonoBehaviour
 
             case STATE.ROPE:
                 rope.transform.localScale += new Vector3((float)4*Time.deltaTime, 0, 0);
-                // Debug.Log(rope.GetComponent<BoxCollider2D>().bounds.size);
-                if (rope.GetComponent<BoxCollider2D>().bounds.size.x >= mDistance - 1)
+                float length = 0.5f*rope.GetComponent<CircleCollider2D>().radius*rope.transform.localScale.x;
+                // Debug.Log(length);
+                if (length >= mDistance)
                     mState = STATE.NORMAL;
             break;
         }
@@ -134,6 +141,7 @@ public class PlayerMovement : MonoBehaviour
         tempSpeedY = moveSpeed;
         isTouchSide = false;
         r.velocity = Vector2.zero;
+        mBackRopeSpeed = 1.5f;
         //
         m_MoveAngle = GetAngle(transform.position, (Vector2)point);
         rope.transform.eulerAngles = new Vector3(
@@ -142,53 +150,51 @@ public class PlayerMovement : MonoBehaviour
             (float)(m_MoveAngle)
         );
         controller.SetGravity(0f);
-        // switch (true)
-        // {
-        //     case PointInTriangle((Vector2)point, transform.position, points[0], points[1]):
-        //         Debug.Log("left");
-        //     break;
-
-        //     case PointInTriangle((Vector2)point, transform.position, points[1], points[2]):
-        //         Debug.Log("down");
-        //     break;
-
-        //     case PointInTriangle((Vector2)point, transform.position, points[2], points[3]):
-        //         Debug.Log("right");
-        //     break;
-
-        //     case PointInTriangle((Vector2)point, transform.position, points[3], points[0]):
-        //         Debug.Log("top");
-        //     break;
-        // }
         if (PointInTriangle((Vector2)point, transform.position, points[0], points[1]))
+        {
                 Debug.Log("left");
+                mDistance = Math.Abs(sideWall[0].transform.position.x - transform.position.x)/Math.Cos(Math.PI - (m_MoveAngle*Math.PI/180));
+        }
         else 
         {
             if (PointInTriangle((Vector2)point, transform.position, points[1], points[2]))
+            {
                 Debug.Log("down");
+                mDistance = Math.Abs(topdownWall[0].transform.position.y - transform.position.y)/Math.Cos(m_MoveAngle*Math.PI/180 + 0.5*Math.PI);
+            }
             else 
             {
                 if (PointInTriangle((Vector2)point, transform.position, points[2], points[3]))
+                {
                     Debug.Log("right");
+                    mDistance = Math.Abs(sideWall[1].transform.position.x - transform.position.x)/Math.Cos(m_MoveAngle*Math.PI/180);
+                }
                 else 
                 {
                     if (PointInTriangle((Vector2)point, transform.position, points[3], points[0]))
+                    {
                         Debug.Log("top");
+                        mDistance = Math.Abs(topdownWall[1].transform.position.y - transform.position.y)/Math.Cos(m_MoveAngle*Math.PI/180 - 0.5*Math.PI);
+                    }
                 }
             }
         }
+        // Debug.Log(mDistance);
         // mDistance = (transform.position.x > point.x) 
         //         ? Math.Abs(sideWall[0].transform.position.x - transform.position.x)/Math.Cos(Math.PI - (m_MoveAngle*Math.PI/180))
         //         : Math.Abs(sideWall[1].transform.position.x - transform.position.x)/Math.Cos(m_MoveAngle*Math.PI/180);
         // Debug.Log(Math.Abs(sideWall[1].transform.position.x - transform.position.x)/Math.Cos(m_MoveAngle*Math.PI/180));
-        // rope.transform.localScale = Vector3.zero;
-        // mState = STATE.ROPE;
+        // Vector3 scale = rope.transform.localScale;
+        // scale.Set((float)0.1,0,0);
+        rope.transform.localScale = new Vector3(0, 1, 1);
+        mState = STATE.ROPE;
     }
 
     void StopHandler(bool side, bool top)
     {
         // m_MoveStep = 0f;
         // tempSpeed = moveSpeed;
+        rope.transform.localScale = new Vector3(0, 1, 1);
         switch (side)
         {
             case false:
@@ -204,6 +210,7 @@ public class PlayerMovement : MonoBehaviour
                 tempSpeedX *= -1;
                 controller.SetGravity(1f);
                 isTouchSide = true;
+                Debug.Log("touch");
             break;
         }
     }
@@ -282,7 +289,7 @@ public class PlayerMovement : MonoBehaviour
         {
             StopHandler(false, false);
         }
-        if (col.gameObject.tag == "SideWall")
+        if (col.gameObject.tag == "LeftWall" || col.gameObject.tag == "RightWall")
         {
             StopHandler(true, false);
         }
