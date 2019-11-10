@@ -95,6 +95,18 @@ TextureImporter:
   - first:
       213: -4730573424505813790
     second: empty
+  - first:
+      213: -4115748872089026214
+    second: texture_30
+  - first:
+      213: 9102596475041888923
+    second: texture_31
+  - first:
+      213: -8364720291062218017
+    second: texture_32
+  - first:
+      213: 6980211426168654421
+    second: texture_33
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -825,6 +837,90 @@ TextureImporter:
       bones: []
       spriteID: e879268b83877e64bbd8ad87539005c1
       internalID: -4730573424505813790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: texture_30
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 1409
+        width: 64
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13cf35f0675918a4bb38cb1a1a43030c
+      internalID: -4115748872089026214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: texture_31
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 1502
+        width: 27
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ca3600686822fa438b11a980a6179c0
+      internalID: 9102596475041888923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: texture_32
+      rect:
+        serializedVersion: 2
+        x: 219
+        y: 1558
+        width: 101
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02d0a7cfacf5b4543a167488a8d71d5a
+      internalID: -8364720291062218017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: texture_33
+      rect:
+        serializedVersion: 2
+        x: 341
+        y: 1415
+        width: 38
+        height: 277
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6368692ffc3c15146973e76eceac26fb
+      internalID: 6980211426168654421
       vertices: []
       indices: 
       edges: []
