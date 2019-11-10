@@ -1,14 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameMgr : Singleton<GameMgr>
 {
     // Start is called before the first frame update
     [SerializeField]
-    private SpriteMask enegry_bar;
+    private Image enegry_point1;
     [SerializeField]
-    private SpriteMask polution_bar;
+    private Image enegry_point2;
+    [SerializeField]
+    private Image enegry_point3;
+    [SerializeField]
+    private Image polution_point;
 
 
 
@@ -18,6 +23,7 @@ public class GameMgr : Singleton<GameMgr>
     [SerializeField]
     private List<GameObject> level_prefab;
     private int current_level = -1;
+    private Vector3 current_position ;
 
 
 
@@ -88,10 +94,11 @@ public class GameMgr : Singleton<GameMgr>
         }
         if (score_polution >= GameConstants.BAR_POLUTION_MAX_LEVEL)
         {
-
+            score_polution = GameConstants.BAR_POLUTION_MAX_LEVEL;
         }
-        float percent = (float)score_polution / GameConstants.BAR_POLUTION_MAX_LEVEL;
-        polution_bar.transform.localScale = new Vector3(percent, polution_bar.transform.localScale.y, polution_bar.transform.localScale.z);
+        polution_point.GetComponent<RectTransform>().position = new Vector3(1 *current_position.x, ((float)score_polution / GameConstants.BAR_POLUTION_MAX_LEVEL) *300f+ current_position.y, 1 )  ;
+       
+       // polution_bar.transform.localScale = new Vector3(percent, polution_bar.transform.localScale.y, polution_bar.transform.localScale.z);
     }
     public void AddEnegryScore(float sco)
     {
@@ -106,12 +113,36 @@ public class GameMgr : Singleton<GameMgr>
             if (score_enegry >= GameConstants.BAR_ENEGRY_MAX_LEVEL)
             {
                 score_enegry = GameConstants.BAR_ENEGRY_MAX_LEVEL;
-
+                enegry_point1.enabled = true;
+                enegry_point2.enabled = true;
+                enegry_point3.enabled = true;
 
             }
+            else
+            if(score_enegry == 2)
+            {
+                enegry_point1.enabled = true;
+                enegry_point2.enabled = true;
+                enegry_point3.enabled = false;
+            }
+            else
+            if (score_enegry == 1)
+            {
+                enegry_point1.enabled = true;
+                enegry_point2.enabled = false;
+                enegry_point3.enabled = false;
+            }
+            else
+            if (score_enegry == 0)
+            {
+                enegry_point1.enabled = false;
+                enegry_point2.enabled = false;
+                enegry_point3.enabled = false;
+            }
         }
-        float percent = (float)score_enegry / GameConstants.BAR_ENEGRY_MAX_LEVEL;
-        enegry_bar.transform.localScale = new Vector3(percent, enegry_bar.transform.localScale.y, enegry_bar.transform.localScale.z);
+      //  float percent = (float)score_enegry / GameConstants.BAR_ENEGRY_MAX_LEVEL;
+        
+      //  enegry_bar.transform.localScale = new Vector3(percent, enegry_bar.transform.localScale.y, enegry_bar.transform.localScale.z);
     }
 
     public void Play()
@@ -125,6 +156,10 @@ public class GameMgr : Singleton<GameMgr>
     // Start is called before the first frame update
     void Start()
     {
+        enegry_point1.enabled = false;
+        enegry_point2.enabled = false;
+        enegry_point3.enabled = false;
+        current_position = polution_point.GetComponent<RectTransform>().position;
       //  SpawnNextLevel();
         Play();
         //   SetState(GameConstants.GAME_MGR_STATE_PLAY);

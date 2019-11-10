@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     // Start is called before the first frame update
     public float speed;
-    private float distance;
+    private float distance=2;
     public bool movingRight = true;
     private bool isClean = false;
     public Transform groundDetection;
@@ -159,22 +159,23 @@ public class Enemy : MonoBehaviour
     {
         transform.Translate(Vector2.right * speed * Time.deltaTime);
         RaycastHit2D groundInfo = Physics2D.Raycast(groundDetection.position, Vector2.down, distance);
-        Debug.Log(groundInfo.collider.tag);
-        if (groundInfo.collider.tag != "Flatform")
-        {
-            
-            if (movingRight == true)
-            {
-                transform.eulerAngles = new Vector3(0, -180, 0);
-                movingRight = false;
-            }
-            else
-            {
-                transform.eulerAngles = new Vector3(0, 0, 0);
-                movingRight = true;
-            }
           
-        }
+            if (groundInfo.collider == false || groundInfo.collider && groundInfo.collider.tag == "Player")
+            {
+                
+            
+                if (movingRight == true)
+                {
+                    transform.eulerAngles = new Vector3(0, -180, 0);
+                    movingRight = false;
+                }
+                else
+                {
+                    transform.eulerAngles = new Vector3(0, 0, 0);
+                    movingRight = true;
+                }
+          
+            }
         //else
         //{
         //    Debug.Log(groundInfo.collider.tag);
