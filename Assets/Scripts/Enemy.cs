@@ -85,7 +85,7 @@ public class Enemy : MonoBehaviour
           
             SetState(GameConstants.ENEMY_STATE_WAITING);
         }
-        Clean();
+       //
     }
 
     public IEnumerator SpawnBullet()
