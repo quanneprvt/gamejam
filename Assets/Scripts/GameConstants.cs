@@ -17,7 +17,8 @@
 
     public const int ITEM_STATE_FALLING = 0;
     public const int ITEM_STATE_GROUND= 1;
-    public const int ITEM_STATE_TAKING = 2;
+    public const int ITEM_STATE_CHANGING = 2;
+    public const int ITEM_STATE_TAKING = 3;
 
     public const int ENEMY_TYPE1 = 0;
     public const int ENEMY_TYPE2 = 1;

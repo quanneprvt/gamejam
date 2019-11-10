@@ -71,7 +71,7 @@ public class GameDefine : Singleton<GameDefine>
     }
     public void SwitchScreen(string screen)
     {
-        //nextScreen = screen;
+        nextScreen = screen;
         //if(screen=="ChooseCharacter")
         //{
         //    SoundManager.Instance.PlaySound(13, false);
@@ -83,8 +83,8 @@ public class GameDefine : Singleton<GameDefine>
         //        SoundManager.Instance.PlaySound(14, false);
         //    }
         //}
-        //FadeAnimMgr.Instance.FadeIn();
-     //   Debug.Log(FadeAnimMgr.Instance.IsDoneFadeIn());
+        FadeAnimMgr.Instance.FadeIn();
+        Debug.Log(FadeAnimMgr.Instance.IsDoneFadeIn());
 
     }
     public bool  IsDoneAnim(Animator anim , string name)
@@ -152,12 +152,12 @@ public class GameDefine : Singleton<GameDefine>
     void Update()
     {
 
-       // Debug.Log(FadeAnimMgr.Instance );
-        //if(FadeAnimMgr.Instance.IsActive())
+        // Debug.Log(FadeAnimMgr.Instance );
+        //if (FadeAnimMgr.Instance.IsActive())
         //{
 
-          
-        //    if(FadeAnimMgr.Instance.IsDoneFadeIn())
+
+        //    if (FadeAnimMgr.Instance.IsDoneFadeIn())
         //    {
         //        SceneManager.LoadScene(nextScreen);
         //        FadeAnimMgr.Instance.FadeOut();
