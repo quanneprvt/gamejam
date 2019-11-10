@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isTouchTop = false;
     private double mDistance = 0;
     private float mBackRopeSpeed = 0f;
+    public Animator animator;
     private STATE mState;
     enum STATE {
         ROPE,
@@ -56,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
         //
         width = (float)Screen.width / 2.0f;
         height = (float)Screen.height / 2.0f;
+        Debug.Log(animator);
         mState = STATE.NONE;
     }
 
@@ -122,7 +124,10 @@ public class PlayerMovement : MonoBehaviour
                 float length = rope.GetComponent<CircleCollider2D>().radius*rope.transform.localScale.x;
                 // Debug.Log(length);
                 if (length >= mDistance - 1)
+                {
                     mState = STATE.NORMAL;
+                    animator.SetBool("IsFly", true);
+                }
             break;
         }
     }
@@ -150,12 +155,14 @@ public class PlayerMovement : MonoBehaviour
             rope.transform.eulerAngles.y,
             transform.position.x < point.x ? (float)(m_MoveAngle) : (float)(180 + m_MoveAngle)
         );
-        Debug.Log(m_MoveAngle);
+        // Debug.Log(m_MoveAngle);
         rope.transform.eulerAngles = new Vector3(
             rope.transform.eulerAngles.x,
             rope.transform.eulerAngles.y,
             (float)(m_MoveAngle%180)
         );
+        Debug.Log(animator);
+        animator.SetBool("IsShoot", true);
         if (transform.position.x < point.x)
         {
             Player.transform.localScale = new Vector3(-1f , Player.transform.localScale.y, Player.transform.localScale.z);
@@ -167,28 +174,28 @@ public class PlayerMovement : MonoBehaviour
         controller.SetGravity(0f);
         if (PointInTriangle((Vector2)point, transform.position, points[0], points[1]))
         {
-                Debug.Log("left");
+                // Debug.Log("left");
                 mDistance = Math.Abs(sideWall[0].transform.position.x - transform.position.x)/Math.Cos(Math.PI - (m_MoveAngle*Math.PI/180));
         }
         else 
         {
             if (PointInTriangle((Vector2)point, transform.position, points[1], points[2]))
             {
-                Debug.Log("down");
+                // Debug.Log("down");
                 mDistance = Math.Abs(topdownWall[0].transform.position.y - transform.position.y)/Math.Cos(m_MoveAngle*Math.PI/180 + 0.5*Math.PI);
             }
             else 
             {
                 if (PointInTriangle((Vector2)point, transform.position, points[2], points[3]))
                 {
-                    Debug.Log("right");
+                    // Debug.Log("right");
                     mDistance = Math.Abs(sideWall[1].transform.position.x - transform.position.x)/Math.Cos(m_MoveAngle*Math.PI/180);
                 }
                 else 
                 {
                     if (PointInTriangle((Vector2)point, transform.position, points[3], points[0]))
                     {
-                        Debug.Log("top");
+                        // Debug.Log("top");
                         mDistance = Math.Abs(topdownWall[1].transform.position.y - transform.position.y)/Math.Cos(m_MoveAngle*Math.PI/180 - 0.5*Math.PI);
                     }
                 }
@@ -209,6 +216,7 @@ public class PlayerMovement : MonoBehaviour
     {
         // m_MoveStep = 0f;
         // tempSpeed = moveSpeed;
+        animator.SetBool("IsGrounded", true);
         rope.transform.localScale = new Vector3(0, 1, 1);
         transform.eulerAngles = new Vector3(
             rope.transform.eulerAngles.x,
