@@ -28,6 +28,7 @@ public class Item : MonoBehaviour
             case GameConstants.ITEM_STATE_GROUND:
                 animator.SetInteger("state", Random.Range(2,6));
                 Type = GameConstants.ITEM_TYPE_GOOD;
+                GameMgr.Instance.AddPolutionScore(1f);
                 break;
             case GameConstants.ITEM_STATE_TAKING:
               
@@ -101,11 +102,12 @@ public class Item : MonoBehaviour
     {
         ItemMgr.Instance.RemoveItem(this);
         Destroy(this.gameObject);
+        GameMgr.Instance.AddPolutionScore(-1f);
     }
     public void Throw(float angle , bool isUp ,float rotate)
     {
-       
-        Vector2 vector_horizon = new Vector2();
+      //  
+         Vector2 vector_horizon = new Vector2();
         Vector2 vector_verticle = new Vector2();
         Vector2 vector = new Vector2();
 
