@@ -44,10 +44,10 @@ public class PlayerMovement : MonoBehaviour
         NONE,
     };
     Vector2[] points = new Vector2[4] {
-        new Vector2((float)(-7.61), (float)5.75), 
-        new Vector2((float)(-7.61), (float)(-7.63)), 
-        new Vector2((float)7.65, (float)(-7.63)), 
-        new Vector2((float)7.65, (float)5.75)
+        new Vector2((float)(-9.07), (float)12), 
+        new Vector2((float)(-9.07), (float)(-10)), 
+        new Vector2((float)9, (float)(-10)), 
+        new Vector2((float)9, (float)12)
         };
     // Start is called before the first frame update
     void Start()
