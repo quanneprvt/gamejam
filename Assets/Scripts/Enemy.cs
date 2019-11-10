@@ -7,8 +7,8 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     public float speed;
     private float distance;
-    private bool movingRight = true;
-
+    public bool movingRight = true;
+    private bool isClean = false;
     public Transform groundDetection;
     
     public int State;
@@ -22,13 +22,18 @@ public class Enemy : MonoBehaviour
     private Transform parentItem;
     [SerializeField]
     private Animator animator;
+    [SerializeField]
+    private Hint hint;
 
 
     public int GetType()
     {
         return type;
     }
-
+    public bool  GetisClean()
+    {
+        return isClean;
+    }
     public void SetState(int state)
     {
         State = state;
@@ -58,6 +63,9 @@ public class Enemy : MonoBehaviour
 
                 timer = GameConstants.TIMER_ENEMY_SHOTING;
                 break;
+            case GameConstants.ENEMY_STATE_CLEAN:
+                
+                break;
 
 
         }
@@ -70,6 +78,7 @@ public class Enemy : MonoBehaviour
         {
             SetState(GameConstants.ENEMY_STATE_WAITING);
         }
+      //  Clean();
     }
 
     public IEnumerator SpawnBullet()
@@ -82,11 +91,11 @@ public class Enemy : MonoBehaviour
             float angle = 0;
             if (movingRight)
             {
-                angle = Random.Range(GameConstants.SPAWN_ANGLE_OF_ENEMY1_MIN, GameConstants.SPAWN_ANGLE_OF_ENEMY1_MAX);
+                angle = -Random.Range(GameConstants.SPAWN_ANGLE_OF_ENEMY1_MIN, GameConstants.SPAWN_ANGLE_OF_ENEMY1_MAX);
             }
             else
             {
-                angle = -Random.Range(GameConstants.SPAWN_ANGLE_OF_ENEMY1_MIN, GameConstants.SPAWN_ANGLE_OF_ENEMY1_MAX);
+                angle = Random.Range(GameConstants.SPAWN_ANGLE_OF_ENEMY1_MIN, GameConstants.SPAWN_ANGLE_OF_ENEMY1_MAX);
             }
             ItemMgr.Instance.AddItem(item.GetComponent<Item>());
             item.GetComponent<Item>().Throw(angle,false,transform.localEulerAngles.z);
@@ -136,6 +145,15 @@ public class Enemy : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
        
+    }
+    public void Clean()
+    {
+        isClean = true;
+        animator.SetBool("isclean", true);
+        SetState(GameConstants.ENEMY_STATE_CLEAN);
+        hint.SetHappy();
+      //  transform.localScale = new Vector3(1,1,1);
+
     }
     void Moving()
     {
@@ -230,6 +248,12 @@ public class Enemy : MonoBehaviour
 
                     if (timer < 0)
                         SetState(GameConstants.ENEMY_STATE_WAITING);
+                }
+                break;
+            case GameConstants.ENEMY_STATE_CLEAN:
+                if(type== GameConstants.ENEMY_TYPE1)
+                {
+                    Moving();
                 }
                 break;
 

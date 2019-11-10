@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2803631758940856287}
   m_Layer: 0
   m_Name: enemy1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -69,13 +69,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
+  movingRight: 0
   groundDetection: {fileID: 2803631760576108394}
   State: 0
   type: 0
   item_prefab:
-  - {fileID: 0}
+  - {fileID: 134218379501215587, guid: bc8488ece70f5d144b658b888543c2d5, type: 3}
   parentItem: {fileID: 0}
   animator: {fileID: 2803631759513551061}
+  hint: {fileID: 0}
 --- !u!60 &2803631758940856287
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -234,7 +236,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2803631760576108397}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.88, y: -0.87, z: 0}
+  m_LocalPosition: {x: 0.89, y: -0.87, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2803631758940856285}
