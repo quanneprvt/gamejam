@@ -30,11 +30,13 @@
     public const int ENEMY_STATE_MOVING_2 = 2;
     public const int ENEMY_STATE_HIDDEN = 3;
     public const int ENEMY_STATE_SHOWING = 4;
+   
 
     public const float ENEMY2_SHOTING_FORCE = 1.5f;
 
     public const int ENEMY_STATE_WAITING = 5;
     public const int ENEMY_STATE_SHOTING = 6;
+    public const int ENEMY_STATE_CLEAN = 7;
 
     public const float TIMER_ENEMY_MOVING = 3.2f;
     public const float TIMER_ENEMY_BULLET = 3f;
@@ -69,6 +71,13 @@
     public const int GAME_STATE_FADEIN = 0;
     public const int GAME_STATE_FADEOUT = 1;
     public const int GAME_STATE_DEACTIVE = 2;
+
+
+    public const int GAME_STATE_NONE = 0;
+    public const int GAME_STATE_PLAY = 1;
+    public const int GAME_STATE_CHANGE_FADEIN = 2;
+    public const int GAME_STATE_CHANGE_FADEOUT = 3;
+    public const int GAME_STATE_FINISH = 4;
 
     public const int GAME_BG_1 = 1;
     public const int GAME_BG_2 = 2;

@@ -10,9 +10,14 @@ public class GameMgr : Singleton<GameMgr>
     [SerializeField]
     private SpriteMask polution_bar;
 
-   
 
 
+
+    [SerializeField]
+    private Animator fade_animator;
+    [SerializeField]
+    private List<GameObject> level_prefab;
+    private int current_level = -1;
 
 
 
@@ -31,9 +36,26 @@ public class GameMgr : Singleton<GameMgr>
 
     public void SetState(int state)
     {
+       
         State = state;
         switch (state)
         {
+
+            case GameConstants.GAME_STATE_NONE:
+              
+                break;
+            case GameConstants.GAME_STATE_PLAY:
+                fade_animator.SetInteger("state", 0);
+                break;
+            case GameConstants.GAME_STATE_CHANGE_FADEIN:
+                fade_animator.SetInteger("state", 1);
+                break;
+            case GameConstants.GAME_STATE_CHANGE_FADEOUT:
+                fade_animator.SetInteger("state", 2);
+                break;
+            case GameConstants.GAME_STATE_FINISH:
+
+                break;
 
 
         }
@@ -42,7 +64,12 @@ public class GameMgr : Singleton<GameMgr>
     {
 
     }
-
+    public void SpawnNextLevel()
+    {
+        current_level += 1;
+        GameObject ob = Instantiate(level_prefab[current_level]);
+        ob.transform.position = Vector3.zero;
+    }
 
     public void SetSpeedGame(float speed)
     {
@@ -89,12 +116,17 @@ public class GameMgr : Singleton<GameMgr>
 
     public void Play()
     {
-
+        SetState(GameConstants.GAME_STATE_PLAY);
+    }
+    public void NextLevel()
+    {
+        SetState(GameConstants.GAME_STATE_PLAY);
     }
     // Start is called before the first frame update
     void Start()
     {
-
+      //  SpawnNextLevel();
+        Play();
         //   SetState(GameConstants.GAME_MGR_STATE_PLAY);
     }
     private void AlignUI(Vector3 posOffset)
@@ -126,15 +158,41 @@ public class GameMgr : Singleton<GameMgr>
     }
     void Awake()
     {
-        int player_type = PlayerPrefs.GetInt("dragon_type");
-        Spawn(player_type);
+       
     }
     // Update is called once per frame
     void Update()
     {
 
 
+        switch (State)
+        {
 
+            case GameConstants.GAME_STATE_NONE:
+
+                break;
+            case GameConstants.GAME_STATE_PLAY:
+
+                break;
+            case GameConstants.GAME_STATE_CHANGE_FADEIN:
+                if(GameDefine.Instance.IsDoneAnim(fade_animator,"fadein"))
+                {
+                    SetState(GameConstants.GAME_STATE_CHANGE_FADEOUT);
+                    SpawnNextLevel();
+                }
+                break;
+            case GameConstants.GAME_STATE_CHANGE_FADEOUT:
+                if (GameDefine.Instance.IsDoneAnim(fade_animator, "fadeout"))
+                {
+                    SetState(GameConstants.GAME_STATE_PLAY);
+                }
+                break;
+            case GameConstants.GAME_STATE_FINISH:
+
+                break;
+
+
+        }
 
     }
 }
