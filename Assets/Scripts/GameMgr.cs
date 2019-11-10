@@ -14,6 +14,8 @@ public class GameMgr : Singleton<GameMgr>
     private Image enegry_point3;
     [SerializeField]
     private Image polution_point;
+    [SerializeField]
+    private Text text_wave;
 
 
 
@@ -75,6 +77,7 @@ public class GameMgr : Singleton<GameMgr>
         current_level += 1;
         GameObject ob = Instantiate(level_prefab[current_level]);
         ob.transform.position = Vector3.zero;
+        text_wave.text = "Wave " + current_level.ToString() + "/" + GameConstants.WAVE_POOL;
     }
 
     public void SetSpeedGame(float speed)

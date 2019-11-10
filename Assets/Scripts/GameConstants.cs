@@ -8,6 +8,7 @@
     public const int BAR_ENEGRY_MAX_LEVEL = 3;
     public const int BAR_POLUTION_MAX_LEVEL = 5;
     public const int BAR_POLUTION_WARNING_LEVEL = 3;
+    public const int WAVE_POOL = 5;
 
     public const float SPAWN_ANGLE_OF_ENEMY1_MIN = 30f;
     public const float SPAWN_ANGLE_OF_ENEMY1_MAX= 60f;

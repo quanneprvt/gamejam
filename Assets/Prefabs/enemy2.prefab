@@ -77,6 +77,9 @@ MonoBehaviour:
   parentItem: {fileID: 0}
   animator: {fileID: 7642135212732810469}
   hint: {fileID: 0}
+  fire_particle: []
+  water_particle: {fileID: 0}
+  polution_particle: {fileID: 0}
 --- !u!60 &7642135211791309241
 PolygonCollider2D:
   m_ObjectHideFlags: 0
