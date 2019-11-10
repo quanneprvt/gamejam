@@ -24,6 +24,9 @@ public class Enemy : MonoBehaviour
     private Animator animator;
     [SerializeField]
     private Hint hint;
+    [SerializeField]
+    private List<ParticleSystem> fire_particle ;
+   
 
 
     public int GetType()
@@ -76,9 +79,13 @@ public class Enemy : MonoBehaviour
         SetState(GameConstants.ENEMY_STATE_MOVING);
         else
         {
+            //water_particle.startRotation +=  transform.rotation.eulerAngles.z -90f;
+            //polution_particle.startRotation += transform.rotation.eulerAngles.z ;
+            //  polution_particle.enableEmission  = false;
+          
             SetState(GameConstants.ENEMY_STATE_WAITING);
         }
-      //  Clean();
+       //
     }
 
     public IEnumerator SpawnBullet()
@@ -152,7 +159,19 @@ public class Enemy : MonoBehaviour
         animator.SetBool("isclean", true);
         SetState(GameConstants.ENEMY_STATE_CLEAN);
         hint.SetHappy();
-      //  transform.localScale = new Vector3(1,1,1);
+        if (type == GameConstants.ENEMY_TYPE1)
+            foreach(ParticleSystem p in fire_particle)
+            {
+                p.enableEmission = false;
+            }
+        else
+        {
+            
+            //polution_particle.enableEmission  = false;
+            //water_particle.enableEmission = true;
+            SetState(GameConstants.ENEMY_STATE_WAITING);
+        }
+        //  transform.localScale = new Vector3(1,1,1);
 
     }
     void Moving()
